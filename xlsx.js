@@ -7675,6 +7675,7 @@ function write_ws_xml_cols(ws, cols) {
       p.width = char2width(width);
       p.customWidth = 1;
     }
+    if(col.hidden) p.hidden = 1;
     o[o.length] = (writextag('col', null, p));
   }
   o[o.length] = "</cols>";
@@ -7943,6 +7944,7 @@ function write_ws_xml(idx, opts, wb) {
   if (ws['!pageSetup'] !== undefined) o[o.length] = write_ws_xml_pagesetup(ws['!pageSetup']);
   if (ws['!rowBreaks'] !== undefined) o[o.length] = write_ws_xml_row_breaks(ws['!rowBreaks']);
   if (ws['!colBreaks'] !== undefined) o[o.length] = write_ws_xml_col_breaks(ws['!colBreaks']);
+  if (ws['!dataValidations'] !== undefined) o[o.length] = write_ws_xml_data_validations(ws['!dataValidations']);
 
   if (o.length > 2) {
     o[o.length] = ('</worksheet>');
@@ -7968,6 +7970,25 @@ function write_ws_xml_col_breaks(breaks) {
     brk.push(writextag('brk', null, {id: thisBreak, max: nextBreak, man: '1'}))
   }
   return writextag('colBreaks', brk.join(' '), {count: brk.length, manualBreakCount: brk.length})
+}
+function write_ws_xml_data_validations(validations) {
+  var dataValidations = [];
+  for (var i = 0; i < validations.length; i++) {
+    var p = {type: validations[i].type};
+    if (validations[i].allowBlank) {
+      p.allowBlank = '1';
+    }
+    if (validations[i].showInputMessage) {
+      p.showInputMessage = '1';
+    }
+    if (validations[i].showErrorMessage) {
+      p.showErrorMessage = '1';
+    }
+    p.sqref = validations[i].ranges.join(' ');
+    var formulas = writextag('formula1', validations[i].formula);
+    dataValidations.push(writextag('dataValidation', formulas, p));
+  }
+  return writextag('dataValidations', dataValidations.join(' '), {count: validations.length});
 }
 
 /* [MS-XLSB] 2.4.718 BrtRowHdr */
