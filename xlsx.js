@@ -7901,19 +7901,9 @@ function write_ws_xml(idx, opts, wb) {
     kids.push(pane)
 
     var selection = writextag('selection', null, {
-      pane: "topLeft"
-    })
-    kids.push(selection)
-
-    var selection = writextag('selection', null, {
-      pane: "bottomLeft"
-    })
-    kids.push(selection)
-
-    var selection = writextag('selection', null, {
-      pane: "bottomRight",
-      activeCell: ws['!freeze'],
-      sqref: ws['!freeze']
+      pane: ws['!freeze'].activePane,
+      activeCell: ws['!freeze'].topLeftCell,
+      sqref: ws['!freeze'].topLeftCell
     })
     kids.push(selection)
   }
