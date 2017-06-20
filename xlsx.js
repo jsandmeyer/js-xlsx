@@ -8732,6 +8732,19 @@ function write_wb_xml(wb, opts) {
 	o[o.length] = WB_XML_ROOT;
 	o[o.length] = (writextag('workbookPr', null, {date1904:safe1904(wb)}));
 	o[o.length] = "<sheets>";
+	for(var i = 0; i != wb.SheetNames.length; ++i) {
+		var sheetOpts = {name:wb.SheetNames[i].substr(0,31), sheetId:""+(i+1), "r:id":"rId"+(i+1)};
+		var sheetName = wb.SheetNames[i];
+		var sheet = wb.Sheets[sheetName];
+		if (sheet && sheet['!extras']) {
+			for (var k in sheet['!extras']) {
+				if (Object.prototype.hasOwnProperty.call(sheet['!extras'], k)) {
+					sheetOpts[k] = sheet['!extras'][k];
+				}
+			}
+		}
+		o[o.length] = (writextag('sheet',null,sheetOpts));
+	}
 	o[o.length] = "</sheets>";
 
   var hasPrintHeaders = false;
