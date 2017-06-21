@@ -8002,6 +8002,7 @@ function write_ws_xml(idx, opts, wb) {
   if (ws['!pageSetup'] !== undefined) o[o.length] = write_ws_xml_pagesetup(ws['!pageSetup']);
   if (ws['!rowBreaks'] !== undefined) o[o.length] = write_ws_xml_row_breaks(ws['!rowBreaks']);
   if (ws['!colBreaks'] !== undefined) o[o.length] = write_ws_xml_col_breaks(ws['!colBreaks']);
+	if (ws['!sheetProtection'] !== undefined) o[o.length] = writextag('sheetProtection', null, ws['!sheetProtection']);
   if (ws['!dataValidations'] !== undefined) o[o.length] = write_ws_xml_data_validations(ws['!dataValidations']);
   if (ws['!tables'] !== undefined) o[o.length] = write_ws_xml_tables(ws['!tables']);
 
@@ -12520,6 +12521,14 @@ var XmlNode = (function () {
           $xf.append($alignment).attr('applyAlignment',1)
 
         }
+
+        if (!attributes.locked) {
+          $xf.attr('applyProtection', 1);
+          var $protection = XmlNode('protection');
+          $protection.attr('locked', 0);
+          $xf.append($protection)
+        }
+
         this.$cellXfs.append($xf);
         var count = +this.$cellXfs.children().length;
 
