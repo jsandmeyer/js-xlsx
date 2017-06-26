@@ -2486,9 +2486,9 @@ function write_ct(ct, opts) {
 		});
 	};
 	f1('workbooks');
-	f2('sheets');
+	['sheets', 'tables'].forEach(f2);
 	f3('themes');
-	['strs', 'styles', 'tables'].forEach(f1);
+	['strs', 'styles'].forEach(f1);
 	['coreprops', 'extprops', 'custprops'].forEach(f3);
 	if(o.length>2){ o[o.length] = ('</Types>'); o[1]=o[1].replace("/>",">"); }
 	return o.join("");
