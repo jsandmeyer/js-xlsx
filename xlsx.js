@@ -7793,13 +7793,16 @@ function write_ws_xml_cell(cell, ref, ws, opts, idx, wb) {
       o.t = "e";
       break;
     default:
-      if (opts.bookSST) {
+      if (opts.bookSST && !cell.f) {
         v = writetag('v', '' + get_sst_id(opts.Strings, cell.v));
         o.t = "s";
         break;
       }
       o.t = "str";
       break;
+  }
+  if (cell.f) {
+    v = writetag('f', '' + escapexml(cell.f)) + v;
   }
   if (cell.t != oldt) {
     cell.t = oldt;
