@@ -5373,8 +5373,17 @@ function write_tab_xml(wb, opts, table) {
 
 	// write the columns
 	var tableColumns = [];
+	var col, colV, colF = null;
 	for (var i = 0; i < cols.length; i++) {
-		tableColumns[tableColumns.length] = writextag('tableColumn', null, {id: i + 1, name: cols[i]});
+		col = cols[i] || '';
+		if (typeof col === 'object') {
+			colV = col.v || '';
+			colF = writextag('calculatedColumnFormula', escapexml(col.f));
+		} else {
+			colV = col;
+			colF = null;
+		}
+		tableColumns[tableColumns.length] = writextag('tableColumn', colF, {id: i + 1, name: colV});
 	}
 	p[p.length] = writextag('tableColumns', tableColumns.join(" "), {count: tableColumns.length});
 
